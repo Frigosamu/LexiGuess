@@ -1,0 +1,66 @@
+<div>
+    <div class="container d-flex align-items-center text-center justify-content-center">
+        <div class="position-absolute top-50 start-50 translate-middle align-items-center">
+            <div class="form-box">
+
+                <h2 class="mb-4">Crear cuenta</h2>
+                <form>
+                    <div>
+                        <div class="campo">
+                            <i class="bx bx-user"></i>
+                            <input [(ngModel)]="nombre" type="text" name="nombre" id="nombre"
+                                placeholder="Nombre de usuario" required>
+                        </div>
+                        @if (errorMsg) {
+                            <p style="color: red; margin: 10px;">{{ errorMsg }}</p>
+                        }
+                    </div>
+                    <div class="mb-3 text-start">
+                        <div class="campo">
+                            <i class="bx bx-envelope"></i>
+                            <input [(ngModel)]="email" type="email" name="email" id="email" placeholder="E-mail"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <div class="campo">
+                            <i class="bx bx-lock"></i>
+                            <input [(ngModel)]="contrasenia" type="password" name="contrasenia" id="contrasenia"
+                                placeholder="Contraseña" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="register-btn" (click)="registrar()">Crear cuenta</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="letra">A</div>
+    <div class="letra">B</div>
+    <div class="letra">C</div>
+    <div class="letra">D</div>
+    <div class="letra">E</div>
+    <div class="letra">F</div>
+    <div class="letra">G</div>
+    <div class="letra">H</div>
+    <div class="letra">I</div>
+    <div class="letra">J</div>
+    <div class="letra">K</div>
+    <div class="letra">L</div>
+    <div class="letra">M</div>
+    <div class="letra">N</div>
+    <div class="letra">O</div>
+    <div class="letra">P</div>
+    <div class="letra">Q</div>
+    <div class="letra">R</div>
+    <div class="letra">S</div>
+    <div class="letra">T</div>
+    <div class="letra">U</div>
+    <div class="letra">V</div>
+    <div class="letra">W</div>
+    <div class="letra">X</div>
+    <div class="letra">Y</div>
+    <div class="letra">Z</div>
+</div>

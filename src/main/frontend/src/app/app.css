@@ -1,0 +1,10 @@
+.main-content {
+    margin-left: 15rem; /* Espacio para el sidebar */
+    min-height: 100vh;
+    transition: margin-left 0.5s ease;
+}
+
+/* Cuando el sidebar está minimizado */
+.sidebar.minimized ~ .main-content {
+    margin-left: 4.94rem;
+}

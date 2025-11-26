@@ -1,0 +1,42 @@
+@if (user()) {
+<div>
+  <div class="container d-flex align-items-center text-center justify-content-center">
+    <div class="position-absolute top-50 start-50 translate-middle align-items-center">
+      <div class="fade-in">
+        <div class="board" role="grid" [attr.aria-rowcount]="rowsCount" [attr.aria-colcount]="colsCount">
+          @for (row of rows; let rowIndex = $index; track rowIndex) {
+          <div class="row" role="row">
+            @for (col of cols; let colIndex = $index; track colIndex) {
+            <input class="tile" role="gridcell" [attr.aria-colindex]="colIndex + 1" [attr.aria-rowindex]="rowIndex + 1"
+              [id]="getCellId(rowIndex, colIndex)" type="text" inputmode="text" autocomplete="off"
+              autocapitalize="characters" spellcheck="false" maxlength="1" [(ngModel)]="board[rowIndex][colIndex]"
+              (input)="onCellInput($event, rowIndex, colIndex)" (keydown)="onCellKeydown($event, rowIndex, colIndex)"
+              [attr.autofocus]="rowIndex === 0 && colIndex === 0 ? true : null"
+              [attr.aria-selected]="rowIndex === 0 && colIndex === 0" [ngClass]="getColor(rowIndex, colIndex)"
+              [disabled]="filasBloqueadas[rowIndex] || juegoTerminado" />
+            }
+          </div>
+          }
+
+          @if (mensajeVictoria) {
+          <div class="popup" role="alert">
+            <div class="popup-content">
+              <h2>{{ mensajeVictoria }}</h2>
+              <button class="login-btn" (click)="mensajeVictoria = null">Cerrar</button>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+} @else {
+<div class="container d-flex align-items-center text-center justify-content-center">
+  <div class="position-absolute top-50 start-50 translate-middle align-items-center">
+    <h2 class="mb-4">Debes iniciar sesión para jugar</h2>
+    <a routerLink="/" class="login-btn mx-2 flex-fill" style="max-width: 200px;">Ir a Inicio</a>
+  </div>
+</div>
+}

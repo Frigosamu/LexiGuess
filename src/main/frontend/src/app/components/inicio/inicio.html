@@ -1,0 +1,78 @@
+<div>
+    <div class="container d-flex align-items-center text-center justify-content-center">
+        <div class="position-absolute top-50 start-50 translate-middle align-items-center">
+
+            <h1 class="mb-3">Bienvenido a LexiGuess!</h1>
+
+            @if (!user()) {
+
+            <h2 class="mb-4">Para comenzar inicia sesión</h2>
+
+            <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+                <div>
+                    <div class="campo">
+                        <i class="bx bx-user"></i>
+                        <input [(ngModel)]="username" type="text" name="username" id="username" placeholder="Usuario"
+                            required>
+                    </div>
+                </div>
+
+                <div class="mb-3 text-start">
+                    <div class="campo">
+                        <i class="bx bx-lock"></i>
+                        <input [(ngModel)]="contrasenia" type="password" name="contrasenia" id="contrasenia"
+                            placeholder="Contraseña" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn mx-2 flex-fill" style="max-width: 200px;"
+                    [disabled]="loading() || loginForm.invalid">
+
+                    @if (loading()) {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                    Iniciando...
+                    } @else {
+                    Iniciar Sesión
+                    }
+                </button>
+
+                @if (error()) {
+                <div class="alert alert-danger mt-3" role="alert">
+                    {{ error() }}
+                </div>
+                }
+            </form>
+            <p class="mt-5">¿No tienes cuenta? <a routerLink="/registro">Registrate ahora</a></p>
+            }
+
+
+        </div>
+    </div>
+
+    <div class="letra">A</div>
+    <div class="letra">B</div>
+    <div class="letra">C</div>
+    <div class="letra">D</div>
+    <div class="letra">E</div>
+    <div class="letra">F</div>
+    <div class="letra">G</div>
+    <div class="letra">H</div>
+    <div class="letra">I</div>
+    <div class="letra">J</div>
+    <div class="letra">K</div>
+    <div class="letra">L</div>
+    <div class="letra">M</div>
+    <div class="letra">N</div>
+    <div class="letra">O</div>
+    <div class="letra">P</div>
+    <div class="letra">Q</div>
+    <div class="letra">R</div>
+    <div class="letra">S</div>
+    <div class="letra">T</div>
+    <div class="letra">U</div>
+    <div class="letra">V</div>
+    <div class="letra">W</div>
+    <div class="letra">X</div>
+    <div class="letra">Y</div>
+    <div class="letra">Z</div>
+</div>

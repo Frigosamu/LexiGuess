@@ -1,0 +1,87 @@
+<nav>
+    <div class="sidebar" id="sidebar" [ngClass]="{'minimized': sidebarMinimized}">
+        <div class="menu-btn" id="menu-btn" (click)="toggleSidebar()">
+            <i class="bx bx-chevron-left"></i>
+        </div>
+        <div class="header">
+
+            <div class="brand">
+                <img src="logo.png" alt="logo">
+                <span>LexiGuess</span>
+            </div>
+        </div>
+
+        <div class="menu-container">
+            <ul class="menu">
+                <li class="menu-item menu-item-static active">
+                    <a routerLink="/partida" class="menu-link">
+                        <i class="bx bx-game"></i>
+                        <span>Jugar</span>
+                    </a>
+                </li>
+                <li class="menu-item menu-item-static">
+                    <a routerLink="/usuario" class="menu-link">
+                        <i class="bx bx-user"></i>
+                        <span>Perfil</span>
+                    </a>
+                </li>
+                <li class="menu-item menu-item-dropdown" (mouseenter)="onSidebarItemHover(0)"
+                    (mouseleave)="closeAllDropdowns()">
+                    <a href="#" class="menu-link" (click)="toggleDropdown(0); $event.preventDefault()">
+                        <i class="bx bx-trophy"></i>
+                        <span>Logros</span>
+                        <i class="bx bx-chevron-down" [class.open]="dropdownOpen[0]"></i>
+                    </a>
+                    <ul class="sub-menu" [class.open]="dropdownOpen[0]">
+                        @if (user()) {
+                            <li><a routerLink="/logros" class="sub-menu-link">Mis logros</a></li>
+                        }
+                        <li><a href="#" class="sub-menu-link">Estadísticas</a></li>
+                        <li><a href="#" class="sub-menu-link">Ranking</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item menu-item-static">
+                    <a href="#" class="menu-link">
+                        <i class="bx bx-history"></i>
+                        <span>Historial</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <ul class="menu">
+                <li class="menu-item menu-item-static">
+                    <a href="#" class="menu-link">
+                        <i class="bx bx-bell"></i>
+                        <span>Notificaciones</span>
+                    </a>
+                </li>
+                <li class="menu-item menu-item-static">
+                    <a href="#" class="menu-link">
+                        <i class="bx bx-cog"></i>
+                        <span>Configuración</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="user">
+                @if (user()) {
+
+                    <div class="user-img">
+                        <img src="favicon.ico" alt="user">
+                    </div>
+                    <div class="user-data">
+                        <span class="name">{{ user()?.nombre }}</span>
+                        <span class="email">{{ user()?.email }}</span>
+                    </div>
+                    
+                    <div class="user-icon" (click)="logout()" style="cursor: pointer;">
+                        <i class="bx bx-exit"></i>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+</nav>

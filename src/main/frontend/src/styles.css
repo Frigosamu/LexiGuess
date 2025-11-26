@@ -1,0 +1,32 @@
+/* You can add global styles to this file, and also import other style files */
+/* Body */
+@import "boxicons/css/boxicons.min.css";
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+body {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    background-color: #E5E9C5;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --color-bg: #EBECF2;
+    --color-surface: #FFFFFF;
+    --color-border: #9A9EB2;
+    --color-text-primary: #000;
+    --color-text-secondary: #072b26;
+    --color-tooltip-bg: #016B61;
+    --color-tooltip-text: #fff;
+    --shadow-border: rgba(0, 0, 0, 0.1);
+    --user-bg-color: #FAFAFC;
+    --botones-light: #9ECFD4;
+    --botones-dark: #70B2B2;
+}
+

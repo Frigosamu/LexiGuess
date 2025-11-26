@@ -1,0 +1,118 @@
+:host {
+  display: grid;
+  min-height: calc(100vh - 0px);
+  place-items: center;
+  color: grey;
+}
+
+.board {
+  --tile-size: clamp(52px, 9vmin, 64px);
+  display: grid;
+  gap: 10px;
+  margin-top: -15rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(5, var(--tile-size));
+  gap: 10px;
+  justify-content: center;
+}
+
+.tile {
+  width: var(--tile-size);
+  aspect-ratio: 1 / 1;
+  border: 2px solid #3a3a3c;
+  border-radius: 8px;
+  background: transparent;
+  box-sizing: border-box;
+
+  text-align: center;
+  font-size: clamp(20px, 5vmin, 28px);
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  color: #000;
+
+  outline: none;
+  caret-color: #000;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.tile:focus {
+  border-color: var(--color-tooltip-bg);
+  box-shadow: 0 0 0 2px var(--botones-light);
+}
+
+.login-btn {
+  border-radius: 0.3rem;
+  padding: 0.55rem;
+  background-color: var(--color-tooltip-bg);
+  text-decoration: none;
+  cursor: pointer;
+  color: var(--color-bg);
+  border: none;
+}
+
+.login-btn:hover {
+  box-shadow: 0 0 0 1px var(--color-text-secondary);
+}
+
+.fade-in {
+  animation: fadeInUp 480ms cubic-bezier(.16, .72, .21, .99) both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in {
+    animation: none;
+  }
+}
+
+.tile.blue {
+  background: #226fff;
+  color: white;
+}
+
+.tile.yellow {
+  background: #c9b458;
+  color: white;
+}
+
+.tile.gray {
+  background: #787c7e;
+  color: white;
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  box-shadow: #000 0px 10px 15px;
+}
+
+.popup-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 22px;
+}

@@ -1,0 +1,58 @@
+<div class="container d-flex align-items-center text-center justify-content-center">
+    <div class="position-absolute top-50 start-50 translate-middle align-items-center">
+        <div class="user-box">
+            <h1>{{ user()?.nombre }}</h1>
+            <div class="mb-3 text-start">
+                <p><strong>Email:</strong></p>
+                <div class="campo">
+                    <i class="bx bx-envelope"></i>
+                    <input type="email" value="{{ user()?.email }}" disabled>
+                </div>
+            </div>
+            <div class="mb-3 text-start">
+                <p><strong>Fecha de Registro:</strong></p>
+                <div class="campo">
+                    <i class="bx bx-calendar"></i>
+                    <input type="text" value="{{ user()?.fechaRegistro }}" disabled>
+                </div>
+            </div>
+            <div class="mb-3 text-start">
+                <p><strong>Rol:</strong></p>
+                <div class="campo">
+                    <i class="bx bx-user"></i>
+                    <input type="text" value="{{ user()?.rol }}" disabled>
+                </div>
+            </div>
+            <div class="mb-3 text-start">
+                <p><strong>Partidas Jugadas:</strong></p>
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Palabra</th>
+                            <th>Intentos</th>
+                            <th>Resultado</th>
+                            <th>Fecha</th>
+                            <th>Puntuación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (partidas(); as partidasUsuario) {
+                            @for (partida of partidasUsuario; track partida.idPartida) {
+                                <tr>
+                                    <td>{{ partida.idPartida }}</td>
+                                    <td>{{ partida.palabra.palabra }}</td>
+                                    <td>{{ partida.intentos }}</td>
+                                    <td>{{ partida.resultado }}</td>
+                                    <td>{{ partida.fecha }}</td>
+                                    <td>{{ partida.puntuacion }}</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
