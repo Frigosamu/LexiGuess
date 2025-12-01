@@ -2,6 +2,7 @@ package com.backend.controller;
 
 import java.util.List;
 
+import com.backend.dto.RankingDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -69,6 +70,11 @@ public class PartidaController {
     @PatchMapping("/partidas/{id}/intentos")
     public Partida actualizarIntentos(@PathVariable Long id, @RequestBody Partida cambios) {
         return partidaService.actualizarIntentos(id, cambios.getIntentos());
+    }
+
+    @GetMapping("/partidas/ranking")
+    public List<RankingDTO> getRanking() {
+        return partidaService.ranking();
     }
 
 }

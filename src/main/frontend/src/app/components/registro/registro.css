@@ -42,10 +42,10 @@
 
 .campo i {
     font-size: 1.5rem;
-    color: #6b7280;
+    color: var(--color-tooltip-bg);
     margin-right: 0.75rem;
     min-width: 50;
-    background-color: var(--botones-dark);
+    background-color: transparent;
     color: var(--color-text-secondary);
     padding: 0.5rem;
     border-radius: 0.25rem;

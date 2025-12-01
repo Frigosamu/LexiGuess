@@ -6,13 +6,25 @@
         <div class="board" role="grid" [attr.aria-rowcount]="rowsCount" [attr.aria-colcount]="colsCount">
           @for (row of rows; let rowIndex = $index; track rowIndex) {
           <div class="row" role="row">
+
             @for (col of cols; let colIndex = $index; track colIndex) {
-            <input class="tile" role="gridcell" [attr.aria-colindex]="colIndex + 1" [attr.aria-rowindex]="rowIndex + 1"
-              [id]="getCellId(rowIndex, colIndex)" type="text" inputmode="text" autocomplete="off"
-              autocapitalize="characters" spellcheck="false" maxlength="1" [(ngModel)]="board[rowIndex][colIndex]"
-              (input)="onCellInput($event, rowIndex, colIndex)" (keydown)="onCellKeydown($event, rowIndex, colIndex)"
+            <input class="tile"
+            [ngClass]="{
+              blue: getColor(rowIndex,colIndex) === 'blue',
+              yellow: getColor(rowIndex,colIndex) === 'yellow',
+              gray: getColor(rowIndex,colIndex) === 'gray',
+              flip: flipCells[rowIndex][colIndex]
+            }"
+            role="gridcell" 
+            [attr.aria-colindex]="colIndex + 1" 
+            [attr.aria-rowindex]="rowIndex + 1"
+            [id]="getCellId(rowIndex, colIndex)" 
+            type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="1" 
+            [(ngModel)]="board[rowIndex][colIndex]"
+              (input)="onCellInput($event, rowIndex, colIndex)" 
+              (keydown)="onCellKeydown($event, rowIndex, colIndex)"
               [attr.autofocus]="rowIndex === 0 && colIndex === 0 ? true : null"
-              [attr.aria-selected]="rowIndex === 0 && colIndex === 0" [ngClass]="getColor(rowIndex, colIndex)"
+              [attr.aria-selected]="rowIndex === 0 && colIndex === 0" 
               [disabled]="filasBloqueadas[rowIndex] || juegoTerminado" />
             }
           </div>
@@ -27,14 +39,48 @@
           </div>
           }
         </div>
+        <div class="teclado-wrapper" aria-hidden="{{juegoTerminado ? 'true' : 'false'}}">
+          <div class="fila-teclado" role="toolbar" aria-label="Teclado">
+            @for (k of fila1; track k) {
+              <button class="tecla" [ngClass]="estadoTecla[k]" (click)="clickTecla(k)"
+                [disabled]="juegoTerminado" aria-label="Tecla {{k}}">
+                {{ k }}
+              </button>
+            }
+          </div>
+        
+          <div class="fila-teclado" role="toolbar" aria-label="Teclado fila 2">
+            @for (k of fila2; track k) {
+              <button class="tecla" [ngClass]="estadoTecla[k]" (click)="clickTecla(k)"
+                [disabled]="juegoTerminado" aria-label="Tecla {{k}}">
+                {{ k }}
+              </button>
+            }
+          </div>
+        
+          <div class="fila-teclado" role="toolbar" aria-label="Teclado fila 3">
+            <button class="tecla tecla-mayor" (click)="clickEnter()" [disabled]="juegoTerminado" aria-label="Enter">ENTER</button>
+        
+            @for (k of fila3; track k) {
+              <button class="tecla" [ngClass]="estadoTecla[k]" (click)="clickTecla(k)"
+                [disabled]="juegoTerminado" aria-label="Tecla {{k}}">
+                {{ k }}
+              </button>
+            }
+        
+            <button class="tecla tecla-mayor" (click)="clickBackspace()" [disabled]="juegoTerminado" aria-label="Backspace">⌫</button>
+          </div>
+        </div>
+
       </div>
     </div>
-
   </div>
 </div>
+
 } @else {
 <div class="container d-flex align-items-center text-center justify-content-center">
   <div class="position-absolute top-50 start-50 translate-middle align-items-center">
+
     <h2 class="mb-4">Debes iniciar sesión para jugar</h2>
     <a routerLink="/" class="login-btn mx-2 flex-fill" style="max-width: 200px;">Ir a Inicio</a>
   </div>

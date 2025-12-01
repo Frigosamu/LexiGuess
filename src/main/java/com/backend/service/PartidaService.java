@@ -1,7 +1,9 @@
 package com.backend.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.backend.dto.RankingDTO;
 import org.springframework.stereotype.Service;
 
 import com.backend.entity.Partida;
@@ -72,4 +74,15 @@ public class PartidaService {
         }).orElseThrow(() -> new PartidaNotFoundException(id));
     }
 
+    //RANKING
+    public List<RankingDTO> ranking() {
+        return this.partidaRepository.findAll()
+                .stream()
+                .collect(Collectors.groupingBy(p -> p.getUsuario(), Collectors.summingInt(Partida::getPuntuacion)))
+                .entrySet()
+                .stream()
+                .map(entry -> new RankingDTO(entry.getKey(), entry.getValue()))
+                .sorted((r1, r2) -> Integer.compare(r2.getPuntuacionTotal(), r1.getPuntuacionTotal()))
+                .collect(Collectors.toList());
+    }
 }

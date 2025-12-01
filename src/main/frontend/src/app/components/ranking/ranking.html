@@ -1,0 +1,35 @@
+<div>
+    <div class="redes">
+        <a href="https://github.com/Frigosamu/LexiGuess" target="_blank" rel="noopener noreferrer">
+            <i class="bi bi-github"></i>
+        </a>
+        <a href="#">
+            <i class="bi bi-envelope"></i>
+        </a>
+        <a href="#">
+            <i class="bi bi-telephone"></i>
+        </a>
+    </div>
+
+    <div class="ranking">
+        <table class="table text-center justify-content-center">
+            <thead>
+                <tr>
+                    <th>Posición</th>
+                    <th>Usuario</th>
+                    <th>Puntuación</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (r of ranking(); track $index; let i = $index) {
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ r.usuario.nombre }}</td>
+                    <td>{{ r.puntuacionTotal }}</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>

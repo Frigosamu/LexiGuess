@@ -38,4 +38,9 @@ export class PartidaService {
   deletePartida(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  getRanking(): Observable<{ usuario: { nombre: string }, puntuacionTotal: number }[]> {
+    return this.http.get<{ usuario: { nombre: string }, puntuacionTotal: number }[]>(`${this.apiUrl}/ranking`);
+  }
+
 }

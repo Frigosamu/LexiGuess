@@ -35,6 +35,7 @@ public class SecurityConfig {
                         .requestMatchers("/usuarios/**").permitAll()
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/logros").permitAll()
+                        .requestMatchers("/partidas/ranking/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/partidas").permitAll()
                         .requestMatchers(HttpMethod.GET, "/partidas").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/partidas/**").permitAll()

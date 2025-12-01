@@ -24,33 +24,41 @@
                 </div>
             </div>
             <div class="mb-3 text-start">
-                <p><strong>Partidas Jugadas:</strong></p>
+              <p><strong>Partidas Jugadas:</strong></p>
+              <div class="table-wrapper">
                 <table class="table table-bordered text-center">
-                    <thead>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Palabra</th>
+                      <th>Intentos</th>
+                      <th>Resultado</th>
+                      <th>Fecha</th>
+                      <th>Puntuación</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @if (paginatedPartidas(); as partidasPagina) {
+                      @for (partida of partidasPagina; track partida.idPartida) {
                         <tr>
-                            <th>ID</th>
-                            <th>Palabra</th>
-                            <th>Intentos</th>
-                            <th>Resultado</th>
-                            <th>Fecha</th>
-                            <th>Puntuación</th>
+                          <td>{{ partida.idPartida }}</td>
+                          <td>{{ partida.palabra.palabra }}</td>
+                          <td>{{ partida.intentos }}</td>
+                          <td>{{ partida.resultado }}</td>
+                          <td>{{ partida.fecha }}</td>
+                          <td>{{ partida.puntuacion }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @if (partidas(); as partidasUsuario) {
-                            @for (partida of partidasUsuario; track partida.idPartida) {
-                                <tr>
-                                    <td>{{ partida.idPartida }}</td>
-                                    <td>{{ partida.palabra.palabra }}</td>
-                                    <td>{{ partida.intentos }}</td>
-                                    <td>{{ partida.resultado }}</td>
-                                    <td>{{ partida.fecha }}</td>
-                                    <td>{{ partida.puntuacion }}</td>
-                                </tr>
-                            }
-                        }
-                    </tbody>
+                      }
+                    }
+                  </tbody>
                 </table>
+              </div>
+            
+              <div class="pagination">
+                <button class="btn btn-outline-dark" (click)="previousPage()" [disabled]="currentPage() === 1"><i class="bx bx-chevron-left"></i></button>
+                <span>Página {{ currentPage() }} de {{ totalPages() }}</span>
+                <button class="btn btn-outline-dark" (click)="nextPage()" [disabled]="currentPage() === totalPages()"><i class="bx bx-chevron-right"></i></button>
+              </div>
             </div>
 
         </div>

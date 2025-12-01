@@ -2,6 +2,7 @@
 /* Body */
 @import "boxicons/css/boxicons.min.css";
 @import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
 
 body {
     display: flex;
@@ -17,16 +18,16 @@ body {
 }
 
 :root {
-    --color-bg: #EBECF2;
-    --color-surface: #FFFFFF;
-    --color-border: #9A9EB2;
-    --color-text-primary: #000;
-    --color-text-secondary: #072b26;
-    --color-tooltip-bg: #016B61;
+    --color-bg: #fff;
+    --color-surface: #fff;
+    --color-border: #bdbdbd;
+    --color-text-primary: #111;
+    --color-text-secondary: #444;
+    --color-tooltip-bg: #222;
     --color-tooltip-text: #fff;
     --shadow-border: rgba(0, 0, 0, 0.1);
-    --user-bg-color: #FAFAFC;
-    --botones-light: #9ECFD4;
-    --botones-dark: #70B2B2;
+    --user-bg-color: #f5f5f5;
+    --botones-light: #e0e0e0;
+    --botones-dark: #757575;
 }
 
