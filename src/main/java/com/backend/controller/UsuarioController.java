@@ -88,4 +88,9 @@ public class UsuarioController {
         this.usuarioLogroService.eliminarLogroDeUsuario(dto.getIdUsuario(), dto.getIdLogro());
     }
 
+    @GetMapping("/logros/{usuarioId}/tiene/{logroId}")
+    public boolean usuarioTieneLogro(@PathVariable Long usuarioId, @PathVariable Long logroId) {
+        return this.usuarioLogroService.usuarioTieneLogro(usuarioId, logroId);
+    }
+
 }

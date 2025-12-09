@@ -1,5 +1,10 @@
 package com.backend.service;
 
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.backend.entity.Logro;
 import com.backend.entity.Usuario;
 import com.backend.entity.UsuarioLogro;
@@ -9,10 +14,6 @@ import com.backend.exceptions.UsuarioNotFoundException;
 import com.backend.repository.LogroRepository;
 import com.backend.repository.UsuarioLogroRepository;
 import com.backend.repository.UsuarioRepository;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
 
 @Service
 public class UsuarioLogroService {
@@ -24,6 +25,12 @@ public class UsuarioLogroService {
         this.usuarioLogroRepository = usuarioLogroRepository;
         this.usuarioRepository = usuarioRepository;
         this.logroRepository = logroRepository;
+    }
+
+    //TIENE LOGRO
+    public boolean usuarioTieneLogro(Long usuarioId, Long logroId) {
+        UsuarioLogroId id = new UsuarioLogroId(usuarioId, logroId);
+        return usuarioLogroRepository.existsById(id);
     }
 
     //LISTAR LOGROS DE UN USUARIO

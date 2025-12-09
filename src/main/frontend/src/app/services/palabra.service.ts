@@ -19,4 +19,7 @@ export class PalabraService {
     return this.http.get<Palabra>(`${this.apiUrl}/random`);
   }
 
+  palabraExists(palabra: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}/exists/${palabra}`);
+  }
 }

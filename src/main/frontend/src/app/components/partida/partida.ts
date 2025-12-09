@@ -8,6 +8,7 @@ import { PalabraService } from '../../services/palabra.service';
 import { Partida as PartidaModel } from '../../models/partida';
 import { Palabra } from '../../models/palabra';
 import { PartidaService } from '../../services/partida.service';
+import { UsuarioLogroService } from '../../services/usuario-logro.service';
 
 @Component({
   selector: 'app-partida',
@@ -19,8 +20,11 @@ import { PartidaService } from '../../services/partida.service';
 export class Partida implements OnInit {
   private auth = inject(AuthService);
   user = toSignal(this.auth.user$, { initialValue: null });
+  errorMsg: string | null = null;
+
   private palabraService = inject(PalabraService);
   private partidaService = inject(PartidaService);
+  private usuarioLogroService = inject(UsuarioLogroService);
 
   palabraObjetivo: string = '';
   partidaActual: PartidaModel | null = null;
@@ -48,12 +52,13 @@ export class Partida implements OnInit {
     this.currentRow = r;
     this.currentCol = c;
 
-    queueMicrotask(() => {
+    setTimeout(() => {
       const el = document.getElementById(this.getCellId(r, c)) as HTMLInputElement | null;
       el?.focus();
       el?.select();
-    });
+    }, 10);
   }
+
 
   onCellInput(event: Event, r: number, c: number) {
     if (this.filasBloqueadas[r]) {
@@ -190,42 +195,71 @@ export class Partida implements OnInit {
   }
 
   getColor(r: number, c: number) {
-    return this.resultados[r]?.[c];
+    return this.resultados[r]?.[c] ?? '';
   }
 
-  flipCells: boolean[][] = Array.from({ length: this.rowsCount }, () =>
-    Array(this.colsCount).fill(false)
-  );
+  animacionesFila: string[][] = Array.from({ length: this.rowsCount }, () => Array(this.colsCount).fill(''));
+  intentoInexistente = 0;
 
   validarFila(r: number) {
     if (!this.partidaActual || this.juegoTerminado) return;
 
     const intento = this.board[r];
+    const palabraIntento = intento.join('');
 
     if (intento.some(letra => letra === '')) {
-      console.log('Fila incompleta');
+      this.errorMsg = 'Fila incompleta.';
       return;
     }
 
-    this.partidaActual.intentos++;
+    this.palabraService.palabraExists(palabraIntento)
+      .subscribe({
+        next: (exists: boolean) => {
+          if (!exists) {
+            this.errorMsg = 'La palabra no existe.';
+            this.intentoInexistente++;
+
+            if (this.intentoInexistente >= 5) {
+              this.darLogro(12);
+            }
+            // Mantener foco en la fila actual
+            this.focusCell(this.currentRow, this.currentCol);
+            return;
+          }
+
+          this.errorMsg = null;
+          this.validarFilaReal(r);
+        },
+        error: (err) => {
+          console.error('Error comprobando existencia de palabra:', err);
+          this.errorMsg = 'Error al validar la palabra.';
+        }
+      });
+  }
+
+  validarFilaReal(r: number) {
+    this.partidaActual!.intentos++;
 
     this.partidaService.updateIntentos(
-      this.partidaActual.idPartida!,
-      this.partidaActual.intentos
+      this.partidaActual!.idPartida!,
+      this.partidaActual!.intentos
     ).subscribe();
 
-
+    const intento = this.board[r];
     const resultado = this.checkWord(intento, this.palabraObjetivo);
     this.resultados[r] = resultado;
 
+    // animación bounce
     for (let c = 0; c < this.colsCount; c++) {
+      this.animacionesFila[r][c] = 'bounce';
       setTimeout(() => {
-        this.flipCells[r][c] = true;
-        setTimeout(() => this.flipCells[r][c] = false, 600);
-      }, c * 120);
+        this.animacionesFila[r][c] = '';
+      }, 400);
     }
 
     this.actualizarEstadoTeclado();
+
+    //Bloquear fila actual
     this.filasBloqueadas[r] = true;
 
     if (r < this.rowsCount - 1) {
@@ -235,12 +269,11 @@ export class Partida implements OnInit {
       this.focusCell(this.currentRow, this.currentCol);
     }
 
-    if (resultado.every(color => color === 'blue')) {
+    if (resultado.every(c => c === 'blue')) {
       this.ganarPartida();
       return;
     }
 
-    // Si ha llegado a la última fila y no ha acertado
     if (r === this.rowsCount - 1) {
       this.perderPartida();
       return;
@@ -249,6 +282,11 @@ export class Partida implements OnInit {
 
   mensajeVictoria: string | null = null;
   juegoTerminado: boolean = false;
+
+  rachaVictorias = 0;
+  rachaDerrotas = 0;
+  partidasTotales = this.user()?.listaPartidas?.length ?? 0;
+  palabrasCompletadas = 0;
 
   ganarPartida() {
     this.mensajeVictoria = '¡Felicidades! Has adivinado la palabra.';
@@ -263,14 +301,23 @@ export class Partida implements OnInit {
 
       this.partidaActual.resultado = 'ganada';
       this.partidaActual.puntuacion = puntuacionFinal;
+      this.rachaVictorias++;
+      this.rachaDerrotas = 0;
+      this.palabrasCompletadas++;
 
-      this.partidaService.updatePartida(this.partidaActual.idPartida!, this.partidaActual).subscribe({
-        next: () => console.log('Partida actualizada con victoria'),
-        error: (err) => console.error('Error actualizando partida:', err),
+      this.partidaService.updatePartida(this.partidaActual.idPartida!, this.partidaActual)
+        .subscribe({
+          next: () => {
+            console.log('Partida actualizada con victoria');
+            this.comprobarLogros();
+          },
+
+          error: (err) => {
+            console.error('Error actualizando partida:', err);
+          }
       });
     }
   }
-
 
   perderPartida() {
     this.mensajeVictoria = `¡Has perdido! La palabra era: ${this.palabraObjetivo}`;
@@ -280,10 +327,19 @@ export class Partida implements OnInit {
 
       this.partidaActual.resultado = 'perdida';
       this.partidaActual.puntuacion = 0;
+      this.rachaDerrotas++;
+      this.rachaVictorias = 0;
 
-      this.partidaService.updatePartida(this.partidaActual.idPartida!, this.partidaActual).subscribe({
-        next: () => console.log('Partida actualizada con derrota'),
-        error: (err) => console.error('Error actualizando partida:', err),
+      this.partidaService.updatePartida(this.partidaActual.idPartida!, this.partidaActual)
+        .subscribe({
+          next: () => {
+          console.log('Partida actualizada con derrota');
+          this.comprobarLogros();
+          },
+
+          error: (err) => {
+          console.error('Error actualizando partida:', err);
+          }
       });
     }
   }
@@ -315,7 +371,7 @@ export class Partida implements OnInit {
 
   clickBackspace() {
     if (this.juegoTerminado) return;
-    
+
     if (this.filasBloqueadas[this.currentRow]) return;
 
     if (this.currentCol > 0) {
@@ -325,7 +381,7 @@ export class Partida implements OnInit {
 
       this.board[this.currentRow][this.currentCol] = '';
       this.focusCell(this.currentRow, this.currentCol);
-    
+
     } else {
       this.board[this.currentRow][0] = '';
       this.focusCell(this.currentRow, 0);
@@ -377,12 +433,12 @@ export class Partida implements OnInit {
 
         if (color === 'blue') {
           this.estadoTecla[letra] = 'blue';
-        
+
         } else if (color === 'yellow') {
           if (prev !== 'blue') {
             this.estadoTecla[letra] = 'yellow';
           }
-        
+
         } else {
           if (!prev) {
             this.estadoTecla[letra] = 'gray';
@@ -392,11 +448,120 @@ export class Partida implements OnInit {
     }
   }
 
-
   ngOnInit() {
     this.randomPalabra();
 
-      this.filasBloqueadas = this.filasBloqueadas.map((_, i) => i !== 0);
+    this.filasBloqueadas = this.filasBloqueadas.map((_, index) => index !== 0);
+  }
 
+  private darLogro(idLogro: number) {
+    const userId = this.user()?.idUsuario;
+    if (!userId) return;
+
+    this.usuarioLogroService.tieneLogro(userId, idLogro)
+      .subscribe({
+        next: (tiene) => {
+          if (!tiene) {
+            this.usuarioLogroService.asignarLogroAUsuario(userId, idLogro)
+              .subscribe({
+                next: () => console.log(`Logro ${idLogro} asignado al usuario ${userId}`),
+                error: (err) => console.error('Error asignando logro:', err),
+              });
+          }
+        }
+      });
+  }
+
+  comprobarLogros() {
+    if (!this.partidaActual || !this.user()?.idUsuario) return;
+
+    const idUser = this.user()!.idUsuario;
+    const intentos = this.partidaActual.intentos;
+    const ganada = this.partidaActual.resultado === 'ganada';
+    const perdida = this.partidaActual.resultado === 'perdida';
+    const palabra = this.palabraObjetivo;
+
+    if (ganada || perdida) {
+      this.darLogro(1); //Completar la primera partida
+
+      if (this.user()?.listaPartidas?.length === 5) {
+        this.darLogro(2); //Completar 5 partidas
+      }
+    }
+
+
+    if (ganada) {
+      if (intentos === 1) {
+        this.darLogro(3); //Acertar a la primera
+      }
+
+      if (intentos <= 3) {
+        this.darLogro(4); //Acertar en 3 intentos o menos
+      }
+
+      if (intentos === 6) {
+        this.darLogro(5); //Acertar en el último intento
+      }
+
+      const fila = this.resultados[intentos - 1];
+      if (fila && fila.every(color => color !== 'yellow')) {
+        this.darLogro(7); //Sin letras amarillas
+      }
+
+      const vocales = palabra.match(/[AEIOUÁÉÍÓÚÜ]/g) || [];
+      const repetidas = new Set(vocales.filter((v, i, arr) => arr.indexOf(v) !== i));
+      if (repetidas.size > 0) {
+        this.darLogro(9); //Palabra con vocales repetidas
+      }
+
+      const AllDifferent = new Set(palabra).size === palabra.length;
+      if (AllDifferent) {
+        this.darLogro(11); //Palabra con todas las letras diferentes
+      }
+
+      if (this.rachaVictorias === 20) {
+        this.darLogro(8); //20 victorias seguidas
+      }
+
+      const letrasIncorrectasUsadas = new Set<string>();
+      let repetidasMal = false;
+
+      for (let fila = 0; fila < intentos - 1; fila++) {
+        for (let c = 0; c < 5; c++) {
+          if (this.resultados[fila][c] === 'gray') {
+            letrasIncorrectasUsadas.add(this.board[fila][c]);
+          }
+        }
+      }
+
+      for (let fila = 1; fila < intentos; fila++) {
+        for (let c = 0; c < 5; c++) {
+          const letra = this.board[fila][c];
+          if (letrasIncorrectasUsadas.has(letra)) {
+            repetidasMal = true;
+          }
+        }
+      }
+
+      if (!repetidasMal) {
+        this.darLogro(10); //Acierta sin repetir letras incorrectas
+      }
+
+
+      if (perdida) {
+        if (this.rachaDerrotas >= 5) {
+          this.darLogro(6); //5 derrotas seguidas
+        }
+      }
+
+      if (this.partidasTotales >= 50) {
+        this.darLogro(13); //50 partidas jugadas
+      }
+
+      if (this.palabrasCompletadas >= 100) {
+        this.darLogro(14); //100 palabras completadas
+      }
+
+    }
   }
 }

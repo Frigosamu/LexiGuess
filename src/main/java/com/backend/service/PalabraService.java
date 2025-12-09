@@ -21,6 +21,11 @@ public class PalabraService {
         return this.palabraRepository.findAll();
     }
 
+    //PALABRA EXISTE
+    public boolean palabraExists(String palabra) {
+        return palabraRepository.existsByPalabra(palabra);
+    }
+
     //BUSCAR PALABRA POR PALABRA
     public Palabra buscarPorPalabra(String palabra){
         if (palabraRepository.existsByPalabra(palabra)){

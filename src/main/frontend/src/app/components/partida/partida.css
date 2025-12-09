@@ -16,7 +16,6 @@
   grid-template-columns: repeat(5, var(--tile-size));
   gap: 10px;
   justify-content: center;
-  perspective: 1000px;
 }
 
 .tile {
@@ -38,11 +37,6 @@
   caret-color: transparent;
   -webkit-appearance: none;
   appearance: none;
-
-  backface-visibility: hidden;
-  transform-style: preserve-3d;
-  will-change: transform;
-  transform-origin: center;
 }
 
 .tile:focus {
@@ -112,6 +106,21 @@
   align-items: center;
   z-index: 999;
   box-shadow: #000 0px 10px 15px;
+
+  opacity: 0;
+  transform: translateY(-12px);
+  animation: popupFadeIn 320ms ease forwards;
+}
+
+@keyframes popupFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .popup-content {
@@ -169,18 +178,35 @@
   .tecla-mayor { min-width: 48px; padding: 8px 12px; }
 }
 
-.flip {
-  animation: flip 0.8s ease backwards;
+.bounce {
+  animation: bounceEffect 0.6s ease-out;
 }
 
-@keyframes flip {
+@keyframes bounceEffect {
   0% {
-    transform: rotateX(0deg);
+    transform: translateY(0);
+    background: transparent;
+  }
+  30% {
+    transform: translateY(-12px);
+    background: transparent; /* color temporal durante el salto */
   }
   50% {
-    transform: rotateX(90deg);
+    transform: translateY(6px);
+    background: transparent;
   }
   100% {
-    transform: rotateX(0deg);
+    transform: translateY(0);
+    background: inherit;
   }
 }
+
+.error-msg {
+  color: #c62828;
+  background: #fde7e7;
+  border: 1px solid #f5c2c2;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
+}
+

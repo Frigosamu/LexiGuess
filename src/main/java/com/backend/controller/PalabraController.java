@@ -64,4 +64,9 @@ public class PalabraController {
         log.info("Obteniendo palabra aleatoria");
         return this.palabraService.palabraAleatoria();
     }
+
+    @GetMapping("/exists/{palabra}")
+    public boolean palabraExiste(@PathVariable String palabra) {
+        return this.palabraService.palabraExists(palabra);
+    }
 }
