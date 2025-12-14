@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Usuario } from '../../models/usuario';
@@ -17,20 +17,22 @@ export class Navbar {
   dropdownOpen: { [key: number]: boolean } = {};
   sidebarMinimized = true;
 
-  private auth = inject(AuthService);
   private router = inject(Router);
+  private auth = inject(AuthService);
 
   user = toSignal<Usuario | null>(this.auth.user$, { initialValue: null });
 
 
-  constructor() { }
+  constructor(private cdr: ChangeDetectorRef) { }
 
   toggleDropdown(index: number): void {
     this.dropdownOpen[index] = !this.dropdownOpen[index];
+    this.cdr.detectChanges();
   }
 
   toggleSidebar(): void {
     this.sidebarMinimized = !this.sidebarMinimized;
+    this.cdr.detectChanges();
   }
 
   closeAllDropdowns(): void {
@@ -38,6 +40,7 @@ export class Navbar {
       Object.keys(this.dropdownOpen).forEach(key => {
         this.dropdownOpen[+key] = false;
       });
+      this.cdr.detectChanges();
     }
   }
 
@@ -45,6 +48,7 @@ export class Navbar {
     if (this.sidebarMinimized) {  
       this.closeAllDropdowns();
       this.dropdownOpen[index] = true;
+      this.cdr.detectChanges();
     }
   }
 

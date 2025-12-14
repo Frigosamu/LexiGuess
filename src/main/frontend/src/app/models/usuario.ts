@@ -6,6 +6,6 @@ export interface Usuario {
     contrasenia: string;
     fechaRegistro: Date;
     email: string;
-    rol: 'usuario' | 'administrador';
+    rol: 'usuario' | 'admin';
     listaPartidas?: Partida[];
 }

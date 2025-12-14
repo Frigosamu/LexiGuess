@@ -1,0 +1,49 @@
+<div>
+    <div class="container d-flex align-items-center text-center justify-content-center">
+        <div class="position-absolute top-50 start-50 translate-middle align-items-center">
+            <div class="form-box">
+                <h2 class="mb-4">Añadir Palabra</h2>
+
+                <form (ngSubmit)="aniadirPalabra()">
+                    <div>
+                        <div class="campo">
+                            <i class="bx bx-font-color"></i>
+                            <input [(ngModel)]="palabra" type="text" name="palabra" id="palabra" placeholder="Palabra"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <div class="campo">
+                            <i class='bx bx-category'></i>
+                            <input [(ngModel)]="categoria" type="text" name="categoria" id="categoria"
+                                placeholder="Categoría" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 text-start">
+                        <div class="campo">
+                            <i class='bx bx-align-left'></i>
+                            <textarea [(ngModel)]="descripcion" name="descripcion" id="descripcion"
+                                placeholder="Descripción" required class="descripcion"></textarea>
+                        </div>
+                    </div>
+                    @if (showPopup) {
+                    <div class="popup" role="alert">
+                        <div class="popup-content">
+                            <h2>Palabra añadida correctamente</h2>
+                            <button (click)="cerrarPopup()" class="cerrar-btn">Cerrar</button>
+                        </div>
+                    </div>
+                    }
+                    @if (errorMsg) {
+                    <p style="color: red; margin: 10px;">{{ errorMsg }}</p>
+                    }
+                    <button type="submit" class="create-btn" [disabled]="isLoading">{{ isLoading ? 'Añadiendo...' :
+                        'Añadir palabra' }}</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</div>

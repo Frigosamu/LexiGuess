@@ -11,9 +11,6 @@
                             <input [(ngModel)]="nombre" type="text" name="nombre" id="nombre"
                                 placeholder="Nombre de usuario" required>
                         </div>
-                        @if (errorMsg) {
-                            <p style="color: red; margin: 10px;">{{ errorMsg }}</p>
-                        }
                     </div>
                     <div class="mb-3 text-start">
                         <div class="campo">
@@ -30,6 +27,9 @@
                                 placeholder="Contraseña" required>
                         </div>
                     </div>
+                    @if (errorMsg) {
+                    <p style="color: red; margin: 10px;">{{ errorMsg }}</p>
+                    }
                     <button type="submit" class="register-btn" (click)="registrar()">Crear cuenta</button>
                 </form>
             </div>

@@ -9,6 +9,7 @@
   --tile-size: clamp(52px, 9vmin, 64px);
   display: grid;
   gap: 10px;
+  margin-bottom: 2rem;
 }
 
 .row {
@@ -97,9 +98,8 @@
 
 .popup {
   position: fixed;
-  top: 0;
-  left: 0;
-  background: red;
+  top: 35%;
+  background: black;
   border-radius: 12px;
   display: flex;
   justify-content: center;
@@ -129,11 +129,16 @@
   border-radius: 12px;
   text-align: center;
   font-size: 22px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
 .teclado-wrapper {
   max-width: 720px;
-  margin: 5rem auto 0.1rem;
+  margin: 2rem auto 0.1rem;
   user-select: none;
   display: flex;
   flex-direction: column;
@@ -178,6 +183,12 @@
   .tecla-mayor { min-width: 48px; padding: 8px 12px; }
 }
 
+@media (max-width: 700px), (max-height: 720px) {
+  .teclado-wrapper {
+    display: none;
+  }
+}
+
 .bounce {
   animation: bounceEffect 0.6s ease-out;
 }
@@ -208,5 +219,27 @@
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
   font-weight: 600;
+}
+
+.popup-logro {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4caf50;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: bold;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  animation: fadeInOut 2s ease forwards;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
 }
 

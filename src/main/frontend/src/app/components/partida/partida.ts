@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../services/auth.service';
 import { RouterModule } from '@angular/router';
@@ -21,6 +21,8 @@ export class Partida implements OnInit {
   private auth = inject(AuthService);
   user = toSignal(this.auth.user$, { initialValue: null });
   errorMsg: string | null = null;
+
+  constructor(private cdr: ChangeDetectorRef) { }
 
   private palabraService = inject(PalabraService);
   private partidaService = inject(PartidaService);
@@ -149,7 +151,7 @@ export class Partida implements OnInit {
       palabra: this.selectedPalabra,
       usuario: { idUsuario: this.user()?.idUsuario } as any,
       intentos: 0,
-      resultado: 'en curso',
+      resultado: 'perdida',
       fecha: new Date(),
       puntuacion: 0,
     };
@@ -212,72 +214,73 @@ export class Partida implements OnInit {
       return;
     }
 
-    this.palabraService.palabraExists(palabraIntento)
-      .subscribe({
-        next: (exists: boolean) => {
-          if (!exists) {
-            this.errorMsg = 'La palabra no existe.';
-            this.intentoInexistente++;
+    this.palabraService.palabraExists(palabraIntento).subscribe({
+      next: (exists: boolean) => {
+        if (!exists) {
+          this.errorMsg = 'La palabra no existe.';
+          this.intentoInexistente++;
 
-            if (this.intentoInexistente >= 5) {
-              this.darLogro(12);
-            }
-            // Mantener foco en la fila actual
-            this.focusCell(this.currentRow, this.currentCol);
-            return;
+          if (this.intentoInexistente >= 5) {
+            this.darLogro(12);
           }
 
-          this.errorMsg = null;
-          this.validarFilaReal(r);
-        },
-        error: (err) => {
-          console.error('Error comprobando existencia de palabra:', err);
-          this.errorMsg = 'Error al validar la palabra.';
+          this.focusCell(this.currentRow, this.currentCol);
+          this.cdr.detectChanges();
+          return;
         }
-      });
-  }
 
-  validarFilaReal(r: number) {
-    this.partidaActual!.intentos++;
+        this.errorMsg = null;
 
-    this.partidaService.updateIntentos(
-      this.partidaActual!.idPartida!,
-      this.partidaActual!.intentos
-    ).subscribe();
+        this.partidaActual!.intentos++;
+        this.partidaService.updateIntentos(
+          this.partidaActual!.idPartida!,
+          this.partidaActual!.intentos
+        ).subscribe();
 
-    const intento = this.board[r];
-    const resultado = this.checkWord(intento, this.palabraObjetivo);
-    this.resultados[r] = resultado;
+        const resultado = this.checkWord(intento, this.palabraObjetivo);
+        this.resultados[r] = resultado;
 
-    // animación bounce
-    for (let c = 0; c < this.colsCount; c++) {
-      this.animacionesFila[r][c] = 'bounce';
-      setTimeout(() => {
-        this.animacionesFila[r][c] = '';
-      }, 400);
-    }
+        for (let c = 0; c < this.colsCount; c++) {
+          this.animacionesFila[r][c] = 'bounce';
+          setTimeout(() => {
+            this.animacionesFila[r][c] = '';
+            this.cdr.detectChanges();
+          }, 400);
+        }
 
-    this.actualizarEstadoTeclado();
+        this.cdr.detectChanges();
 
-    //Bloquear fila actual
-    this.filasBloqueadas[r] = true;
 
-    if (r < this.rowsCount - 1) {
-      this.filasBloqueadas[r + 1] = false;
-      this.currentRow = r + 1;
-      this.currentCol = 0;
-      this.focusCell(this.currentRow, this.currentCol);
-    }
+        this.actualizarEstadoTeclado();
+        this.cdr.detectChanges();
 
-    if (resultado.every(c => c === 'blue')) {
-      this.ganarPartida();
-      return;
-    }
+        this.filasBloqueadas[r] = true;
 
-    if (r === this.rowsCount - 1) {
-      this.perderPartida();
-      return;
-    }
+        if (r < this.rowsCount - 1) {
+          this.filasBloqueadas[r + 1] = false;
+          this.currentRow = r + 1;
+          this.currentCol = 0;
+          this.focusCell(this.currentRow, this.currentCol);
+        }
+
+        this.cdr.detectChanges();
+
+        if (resultado.every(c => c === 'blue')) {
+          this.ganarPartida();
+          return;
+        }
+
+        if (r === this.rowsCount - 1) {
+          this.perderPartida();
+          return;
+        }
+      },
+
+      error: (err) => {
+        console.error('Error comprobando existencia de palabra:', err);
+        this.errorMsg = 'Error al validar la palabra.';
+      }
+    });
   }
 
   mensajeVictoria: string | null = null;
@@ -289,7 +292,7 @@ export class Partida implements OnInit {
   palabrasCompletadas = 0;
 
   ganarPartida() {
-    this.mensajeVictoria = '¡Felicidades! Has adivinado la palabra.';
+    this.mensajeVictoria = `¡Felicidades! Has adivinado la palabra.\n ${this.palabraObjetivo}`;
     this.juegoTerminado = true;
 
     if (this.partidaActual) {
@@ -315,12 +318,12 @@ export class Partida implements OnInit {
           error: (err) => {
             console.error('Error actualizando partida:', err);
           }
-      });
+        });
     }
   }
 
   perderPartida() {
-    this.mensajeVictoria = `¡Has perdido! La palabra era: ${this.palabraObjetivo}`;
+    this.mensajeVictoria = `¡Has perdido! La palabra era:\n ${this.palabraObjetivo}`;
     this.juegoTerminado = true;
 
     if (this.partidaActual) {
@@ -333,14 +336,14 @@ export class Partida implements OnInit {
       this.partidaService.updatePartida(this.partidaActual.idPartida!, this.partidaActual)
         .subscribe({
           next: () => {
-          console.log('Partida actualizada con derrota');
-          this.comprobarLogros();
+            console.log('Partida actualizada con derrota');
+            this.comprobarLogros();
           },
 
           error: (err) => {
-          console.error('Error actualizando partida:', err);
+            console.error('Error actualizando partida:', err);
           }
-      });
+        });
     }
   }
 
@@ -452,7 +455,14 @@ export class Partida implements OnInit {
     this.randomPalabra();
 
     this.filasBloqueadas = this.filasBloqueadas.map((_, index) => index !== 0);
+
   }
+
+
+
+  logrosObtenidos: number[] = [];
+  mostrarPopupLogros: boolean = false;
+  mensajePopupLogros: string = '';
 
   private darLogro(idLogro: number) {
     const userId = this.user()?.idUsuario;
@@ -464,12 +474,30 @@ export class Partida implements OnInit {
           if (!tiene) {
             this.usuarioLogroService.asignarLogroAUsuario(userId, idLogro)
               .subscribe({
-                next: () => console.log(`Logro ${idLogro} asignado al usuario ${userId}`),
+                next: () => {
+                  console.log(`Logro ${idLogro} asignado al usuario ${userId}`)
+                  this.logrosObtenidos.push(idLogro);
+                },
                 error: (err) => console.error('Error asignando logro:', err),
               });
           }
         }
       });
+  }
+
+  private mostrarLogrosPopup() {
+    const count = this.logrosObtenidos.length;
+    if (count === 0) return;
+
+    this.mensajePopupLogros = count === 1 ?
+      '¡1 logro obtenido!' : `¡${count} logros obtenidos!`;
+    this.mostrarPopupLogros = true;
+
+    setTimeout(() => {
+      this.mostrarPopupLogros = false;
+    }, 2000);
+
+    this.logrosObtenidos = [];
   }
 
   comprobarLogros() {
@@ -487,6 +515,10 @@ export class Partida implements OnInit {
       if (this.user()?.listaPartidas?.length === 5) {
         this.darLogro(2); //Completar 5 partidas
       }
+
+      setTimeout(() => {
+        this.mostrarLogrosPopup();
+      }, 300);
     }
 
 
@@ -547,11 +579,14 @@ export class Partida implements OnInit {
         this.darLogro(10); //Acierta sin repetir letras incorrectas
       }
 
+      setTimeout(() => {
+        this.mostrarLogrosPopup();
+      }, 300);
+    }
 
-      if (perdida) {
-        if (this.rachaDerrotas >= 5) {
-          this.darLogro(6); //5 derrotas seguidas
-        }
+    if (perdida) {
+      if (this.rachaDerrotas >= 5) {
+        this.darLogro(6); //5 derrotas seguidas
       }
 
       if (this.partidasTotales >= 50) {
@@ -562,6 +597,30 @@ export class Partida implements OnInit {
         this.darLogro(14); //100 palabras completadas
       }
 
+      setTimeout(() => {
+        this.mostrarLogrosPopup();
+      }, 300);
     }
+
+  }
+
+  newGame() {
+    this.mensajeVictoria = null;
+    this.juegoTerminado = false;
+    this.errorMsg = null;
+
+    this.board = Array.from({ length: this.rowsCount }, () => Array(this.colsCount).fill(''));
+    this.resultados = [];
+    this.animacionesFila = Array.from({ length: this.rowsCount }, () => Array(this.colsCount).fill(''));
+    this.estadoTecla = {};
+    this.filasBloqueadas = Array(this.rowsCount).fill(false);
+    this.currentRow = 0;
+    this.currentCol = 0;
+
+    this.randomPalabra();
+
+    this.filasBloqueadas = this.filasBloqueadas.map((_, index) => index !== 0);
+    this.focusCell(0, 0);
+    this.cdr.detectChanges();
   }
 }

@@ -6,7 +6,7 @@ export interface Partida {
     palabra: Palabra;
     usuario: Usuario;
     intentos: number;
-    resultado: 'ganada' | 'perdida' | 'en curso';
+    resultado: 'ganada' | 'perdida';
     fecha: Date;
     puntuacion: number;
 }

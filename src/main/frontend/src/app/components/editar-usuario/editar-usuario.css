@@ -1,0 +1,152 @@
+.form-box {
+  width: 500px;
+  height: auto;
+  background: white;
+  padding: 2.5rem;
+  border-radius: 0.7rem;
+  box-shadow: 0px 5px 18px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  position: relative;
+}
+
+.create-btn {
+  border-radius: 0.3rem;
+  padding: 0.55rem 1rem;
+  background-color: var(--color-tooltip-bg);
+  text-decoration: none;
+  cursor: pointer;
+  color: var(--color-bg);
+  border: none;
+  margin-right: 0.5rem;
+}
+
+.create-btn:hover {
+  box-shadow: 0 0 0 1px var(--color-text-secondary);
+}
+
+.cancel-btn {
+  border-radius: 0.3rem;
+  padding: 0.55rem 1rem;
+  background-color: #ccc;
+  text-decoration: none;
+  cursor: pointer;
+  color: #333;
+  border: none;
+}
+
+.cancel-btn:hover {
+  box-shadow: 0 0 0 1px var(--color-text-secondary);
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.campo {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  margin: 0 auto 1.2rem auto;
+  border-radius: 0.3rem;
+  box-shadow: 0 0 0 1px #42424241;
+  cursor: pointer;
+  transition: box-shadow 0.5s ease;
+  background-color: var(--color-surface);
+}
+
+.campo:hover {
+  box-shadow: 0 0 0 1px var(--color-text-primary);
+}
+
+.campo i {
+  font-size: 1.5rem;
+  color: var(--color-tooltip-bg);
+  margin-right: 0.75rem;
+  min-width: 50;
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.campo:hover i {
+  color: var(--color-text-primary);
+}
+
+.campo input, .campo select, .campo textarea {
+  flex: 1;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: var(--color-text-primary);
+  padding: 0.25rem 0;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popup {
+  opacity: 0;
+  transform: scale(0.8);
+  animation: popupFadeIn 300ms ease forwards;
+}
+
+@keyframes popupFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.popup-content {
+  width: 300px;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.cerrar-btn {
+  border-radius: 0.3rem;
+  padding: 0.55rem 1rem;
+  background-color: var(--color-tooltip-bg);
+  text-decoration: none;
+  cursor: pointer;
+  color: var(--color-bg);
+  border: none;
+}
+
+.cerrar-btn:hover {
+  box-shadow: 0 0 0 1px var(--color-text-secondary);
+}

@@ -1,1 +1,48 @@
-<p>usuario-logro.component works!</p>
+<div class="container d-flex align-items-center text-center justify-content-center">
+  <div class="position-absolute top-50 start-50 translate-middle align-items-center">
+    <div class="user-box">
+      <h1>Logros de {{ user()?.nombre }}</h1>
+
+      @if (error()) {
+        <div class="error-msg" role="alert">{{ error() }}</div>
+      }
+
+      <div class="mb-3 text-center">
+        <div class="table-wrapper">
+          <table class="table table-bordered text-center">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Logro</th>
+                <th>Descripción</th>
+                <th>Fecha de obtención</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (paginatedLogros(); as logrosPagina) {
+                @for (ul of logrosPagina; track ul.id.logroId; let i = $index) {
+                  <tr>
+                    <td>{{ (currentPage() - 1) * pageSize() + i + 1 }}</td>
+                    <td>{{ ul.logro.nombre }}</td>
+                    <td>{{ ul.logro.descripcion }}</td>
+                    <td>{{ ul.fechaObtencion }}</td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <button class="btn btn-outline-dark" (click)="previousPage()" [disabled]="currentPage() === 1">
+            <i class="bx bx-chevron-left"></i>
+          </button>
+          <span>Página {{ currentPage() }} de {{ totalPages() }}</span>
+          <button class="btn btn-outline-dark" (click)="nextPage()" [disabled]="currentPage() === totalPages()">
+            <i class="bx bx-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

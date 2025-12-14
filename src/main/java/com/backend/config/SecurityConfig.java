@@ -31,7 +31,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/palabras/**").permitAll()
+                        .requestMatchers("/palabras/**").permitAll()
+                        .requestMatchers("/palabras").permitAll()
                         .requestMatchers("/usuarios/**").permitAll()
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/logros").permitAll()

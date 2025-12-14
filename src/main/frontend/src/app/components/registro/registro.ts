@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { UsuarioService } from '../../services/usuario.service';
 import { Router } from '@angular/router';
 import { Usuario } from '../../models/usuario';
 import { FormsModule } from "@angular/forms";
 import { AuthService } from "../../services/auth.service";
-import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-registro',
@@ -45,7 +44,7 @@ export class Registro {
       },
       error: (err) => {
         if (err.status === 400 || err.status === 500) {
-          this.errorMsg = err.error.message || 'Error en el registro. Intente nuevamente.';
+          this.errorMsg = err.error.message || 'El nombre de usuario ya está en uso.';
         } else {
           this.errorMsg = 'Error inesperado. No se pudo conectar con el servidor.';
         }

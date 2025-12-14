@@ -22,4 +22,16 @@ export class PalabraService {
   palabraExists(palabra: string): Observable<boolean> {
     return this.http.get<boolean>(`${this.apiUrl}/exists/${palabra}`);
   }
+
+  createPalabra(palabra: Palabra): Observable<Palabra> {
+    return this.http.post<Palabra>(this.apiUrl, palabra);
+  }
+
+  deletePalabra(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  editarPalabra(id: number, palabra: Palabra): Observable<Palabra> {
+    return this.http.put<Palabra>(`${this.apiUrl}/${id}`, palabra);
+  }
 }

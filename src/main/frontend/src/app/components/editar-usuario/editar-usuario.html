@@ -1,0 +1,70 @@
+<div>
+    <div class="container d-flex align-items-center text-center justify-content-center">
+        <div class="position-absolute top-50 start-50 translate-middle align-items-center">
+            <div class="form-box">
+                <h2 class="mb-4">Editar Usuario</h2>
+
+                <form (ngSubmit)="guardarCambios()">
+                    <div class="text-start">
+                        <div class="campo">
+                            <i class="bx bx-user"></i>
+                            <input [(ngModel)]="nombre" type="text" name="nombre" id="nombre" placeholder="Nombre"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <div class="campo">
+                            <i class="bx bx-envelope"></i>
+                            <input [(ngModel)]="email" type="email" name="email" id="email" placeholder="Email"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <div class="campo">
+                            <i class="bx bx-lock"></i>
+                            <input [(ngModel)]="contrasenia" type="password" name="contrasenia" id="contrasenia"
+                                placeholder="Contraseña (dejar en blanco para no cambiar)">
+                        </div>
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <div class="campo">
+                            <i class="bx bx-shield-quarter"></i>
+                            <select [(ngModel)]="rol" name="rol" id="rol" class="select">
+                                <option value="usuario">Usuario</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    @if (showPopup) {
+                    <div class="popup-overlay">
+                        <div class="popup">
+                            <div class="popup-content">
+                                <h2>Usuario actualizado correctamente.</h2>
+                                <h3>Cierre y vuelva a iniciar sesión para aplicar los cambios.</h3>
+                                <button type="button" (click)="cerrarPopup()" class="cerrar-btn">Aceptar</button>
+                            </div>
+                        </div>
+                    </div>
+                    }
+
+                    @if (errorMsg) {
+                    <p style="color: red; margin: 10px;">{{ errorMsg }}</p>
+                    }
+
+                    <div class="button-group">
+                        <button type="submit" class="create-btn" [disabled]="isLoading">
+                            {{ isLoading ? 'Guardando...' : 'Guardar cambios' }}
+                        </button>
+                        <button type="button" class="cancel-btn" (click)="cancelar()" [disabled]="isLoading">
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

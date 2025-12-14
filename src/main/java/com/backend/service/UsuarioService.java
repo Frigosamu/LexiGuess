@@ -14,8 +14,9 @@ import com.backend.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {
+
     private final UsuarioRepository usuarioRepository;
-    private  final PartidaRepository partidaRepository;
+    private final PartidaRepository partidaRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -59,31 +60,36 @@ public class UsuarioService {
             u.setFechaRegistro(usuario.getFechaRegistro());
             u.setRol(usuario.getRol());
 
-            if (!passwordEncoder.matches(usuario.getContrasenia(), u.getContrasenia())) {
-                u.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
+            if (usuario.getContrasenia() != null && !usuario.getContrasenia().isBlank()) {
+                if (!passwordEncoder.matches(usuario.getContrasenia(), u.getContrasenia())) {
+                    u.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
+                }
             }
+            
             return usuarioRepository.save(u);
         }).orElseThrow(() -> new UsuarioNotFoundException(id));
     }
 
     //ELIMINAR USUARIO
     public void eliminar(Long id) {
-        this.usuarioRepository.findById(id).map(u -> {this.usuarioRepository.delete(u);
-            return u;}).orElseThrow(() -> new UsuarioNotFoundException(id));
+        this.usuarioRepository.findById(id).map(u -> {
+            this.usuarioRepository.delete(u);
+            return u;
+        }).orElseThrow(() -> new UsuarioNotFoundException(id));
     }
-    
+
     //LISTA DE PARTIDAS DEL USUARIO
     public List<Partida> partidasPorUsuario(Long idUsuario) {
         this.usuarioRepository.findById(idUsuario)
-            .orElseThrow(() -> new UsuarioNotFoundException(idUsuario));
-            
+                .orElseThrow(() -> new UsuarioNotFoundException(idUsuario));
+
         return this.partidaRepository.findByUsuarioIdUsuario(idUsuario);
     }
 
     //LOGIN
     public Usuario login(String nombre, String contrasenia) {
         Usuario usuario = usuarioRepository.findByNombre(nombre)
-            .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
         if (!passwordEncoder.matches(contrasenia, usuario.getContrasenia())) {
             throw new IllegalArgumentException("Contraseña incorrecta");
         }
@@ -94,7 +100,7 @@ public class UsuarioService {
     //LOGOUT
     public void logout(String nombre) {
         Usuario usuario = usuarioRepository.findByNombre(nombre)
-            .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
         System.out.println("Se ha cerrado sesión correctamente.");
     }
 }

@@ -1,6 +1,5 @@
 @if (user()) {
 <div>
-
   <div class="container d-flex align-items-center text-center justify-content-center">
     <div class="position-absolute top-50 start-50 translate-middle align-items-center">
 
@@ -22,18 +21,34 @@
           </div>
           }
           @if (errorMsg) {
-           <div class="error-msg" role="alert">{{ errorMsg }}</div>
+          <div class="error-msg" role="alert">{{ errorMsg }}</div>
           }
 
           @if (mensajeVictoria) {
           <div class="popup" role="alert">
             <div class="popup-content">
               <h2>{{ mensajeVictoria }}</h2>
+              <p style="color: black;">{{ selectedPalabra?.descripcion }}</p>
+
               <button class="login-btn" (click)="mensajeVictoria = null">Cerrar</button>
+              <button class="login-btn d-block mt-2 justify-content-center align-items-center"
+                (click)="newGame()">Partida nueva</button>
             </div>
           </div>
           }
         </div>
+
+        @if (mostrarPopupLogros) {
+          <div class="popup-logro">
+            {{ mensajePopupLogros }}
+          </div>
+        }
+
+        @if (juegoTerminado) {
+        <button class="login-btn" (click)="newGame()">Partida nueva</button>
+        }
+
+
         <div class="teclado-wrapper" aria-hidden="{{juegoTerminado ? 'true' : 'false'}}">
 
           <div class="fila-teclado" role="toolbar">
@@ -66,7 +81,6 @@
 } @else {
 <div class="container d-flex align-items-center text-center justify-content-center">
   <div class="position-absolute top-50 start-50 translate-middle align-items-center">
-
     <h2 class="mb-4">Debes iniciar sesión para jugar</h2>
     <a routerLink="/" class="login-btn mx-2 flex-fill" style="max-width: 200px;">Ir a Inicio</a>
   </div>

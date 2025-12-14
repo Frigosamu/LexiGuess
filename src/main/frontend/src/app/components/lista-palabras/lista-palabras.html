@@ -1,0 +1,83 @@
+<div class="container d-flex align-items-center text-center justify-content-center">
+  <div class="position-absolute top-50 start-50 translate-middle align-items-center">
+    <div class="list-box">
+      <h2 class="mb-3">Lista de Palabras</h2>
+
+      @if (error()) {
+        <div class="error-msg" role="alert">{{ error() }}</div>
+      }
+
+      <div class="controls mb-3">
+        <input type="text" placeholder="Buscar palabra o descripción..." [ngModel]="buscar()"
+          (ngModelChange)="buscar.set($event); currentPage.set(1)" class="search" />
+        <button class="btn-clear" (click)="clearFilters()">Borrar</button>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="table table-bordered text-center">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Palabra</th>
+              <th>Categoría</th>
+              <th>Descripción</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of paginated(); track p.idPalabra; let i = $index) {
+              <tr>
+                <td>{{ (currentPage() - 1) * pageSize() + i + 1 }}</td>
+                <td>{{ p.palabra }}</td>
+                <td>{{ p.categoria }}</td>
+                <td class="desc-cell">{{ p.descripcion }}</td>
+                <td>
+                  <button class="btn btn-sm btn-outline-primary" [routerLink]="['/editar-palabra']" 
+                  [queryParams]="{ id: p.idPalabra }">Editar</button>
+                  <button class="btn btn-sm btn-outline-danger ms-1" (click)="abrirConfirmacion(p)"
+                    [disabled]="isLoading()">
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            }
+            @if (paginated().length === 0) {
+              <tr>
+                <td colspan="5">No hay resultados.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination">
+        <button class="btn btn-outline-dark" (click)="previousPage()" [disabled]="currentPage() === 1">
+          <i class="bx bx-chevron-left"></i>
+        </button>
+        <span>Página {{ currentPage() }} de {{ totalPages() }}</span>
+        <button class="btn btn-outline-dark" (click)="nextPage()" [disabled]="currentPage() === totalPages()">
+          <i class="bx bx-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if (showConfirmPopup()) {
+  <div class="popup-overlay">
+    <div class="popup">
+      <div class="popup-content">
+        <h3>¿Eliminar palabra?</h3>
+        <p>¿Estás seguro de que deseas eliminar "<strong>{{ palabraAEliminar?.palabra }}</strong>"?</p>
+        <div class="popup-buttons">
+          <button class="btn-confirm" (click)="confirmarEliminacion()" [disabled]="isLoading()">
+            {{ isLoading() ? 'Eliminando...' : 'Eliminar' }}
+          </button>
+          <button class="btn-cancel" (click)="cerrarConfirmacion()" [disabled]="isLoading()">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+</div>

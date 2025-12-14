@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Navbar } from './components/navbar/navbar';
 import { CommonModule } from '@angular/common';
 import { Ranking } from "./components/ranking/ranking";
+
 
 @Component({
   selector: 'app-root',
