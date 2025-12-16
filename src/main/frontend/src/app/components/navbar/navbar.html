@@ -1,6 +1,5 @@
 <nav>
-    <div class="menu-btn sidebar-btn" id="sidebar-btn" (click)="toggleMobile()"
-        [class.open]="mobileOpen">
+    <div class="menu-btn sidebar-btn" id="sidebar-btn" (click)="toggleMobile()" [class.open]="mobileOpen">
         <i class="bx bx-menu"></i>
         <i class="bx bx-x"></i>
     </div>
@@ -11,7 +10,9 @@
         <div class="header">
 
             <div class="brand">
-                <img src="logo.png" alt="logo">
+                <a routerLink="/partida">
+                    <img src="logo.png" alt="logo">
+                </a>
                 <span>LexiGuess</span>
             </div>
         </div>
