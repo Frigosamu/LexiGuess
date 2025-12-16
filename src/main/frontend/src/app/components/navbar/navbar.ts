@@ -16,6 +16,9 @@ import { toSignal } from '@angular/core/rxjs-interop';
 export class Navbar {
   dropdownOpen: { [key: number]: boolean } = {};
   sidebarMinimized = true;
+  mobileOpen = false;
+  private prevSidebarMinimized?: boolean;
+
 
   private router = inject(Router);
   private auth = inject(AuthService);
@@ -35,8 +38,25 @@ export class Navbar {
     this.cdr.detectChanges();
   }
 
+  toggleMobile(): void {
+    const seAbre = !this.mobileOpen;
+
+    if (seAbre) {
+      this.prevSidebarMinimized = this.sidebarMinimized;
+      this.sidebarMinimized = false;
+    } else {
+      if (this.prevSidebarMinimized !== undefined) {
+        this.sidebarMinimized = this.prevSidebarMinimized;
+        this.prevSidebarMinimized = undefined;
+      }
+    }
+
+    this.mobileOpen = seAbre;
+    this.cdr.detectChanges();
+  }
+
   closeAllDropdowns(): void {
-    if (this.sidebarMinimized) {   
+    if (this.sidebarMinimized) {
       Object.keys(this.dropdownOpen).forEach(key => {
         this.dropdownOpen[+key] = false;
       });
@@ -45,7 +65,7 @@ export class Navbar {
   }
 
   onSidebarItemHover(index: number): void {
-    if (this.sidebarMinimized) {  
+    if (this.sidebarMinimized) {
       this.closeAllDropdowns();
       this.dropdownOpen[index] = true;
       this.cdr.detectChanges();

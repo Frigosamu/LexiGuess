@@ -31,6 +31,10 @@ export class Usuario {
     });
   }
 
+  getTotalScore(): number {
+    return this.partidas().reduce((total, partida) => total + (partida.puntuacion || 0), 0);
+  }
+
   currentPage = signal(1);
   pageSize = signal(5);
 

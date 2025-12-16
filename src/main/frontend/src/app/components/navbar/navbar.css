@@ -351,8 +351,42 @@
     background-color: rgba(230, 230, 230, 0.445);
 }
 
+.sidebar-btn {
+    display: none;
+}
+
+.sidebar-btn i {
+    font-size: 1.2rem;
+}
+.sidebar-btn i:last-child {
+    display: none;
+}
+.sidebar-btn.open i:first-child {
+    display: none;
+}
+.sidebar-btn.open i:last-child {
+    display: block;
+}
+
 @media (max-width: 1225px) {
-    .sidebar {
+    #menu-btn {
         display: none;
     }
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    .sidebar-btn {
+        display: flex;
+        right: 1rem;
+        padding: 1.2rem;
+    }
+    .sidebar-btn i:last-child {
+        display: none;
+    }
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
 }
+

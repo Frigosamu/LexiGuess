@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UsuarioService } from '../../services/usuario.service';
 import { Usuario } from '../../models/usuario';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-editar-usuario',
@@ -14,10 +16,12 @@ import { Usuario } from '../../models/usuario';
 })
 
 export class EditarUsuario implements OnInit {
+  private auth = inject(AuthService);
   private usuarioService = inject(UsuarioService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-
+  
+  user = toSignal<Usuario | null>(this.auth.user$, { initialValue: null });
   usuarioId: number | null = null;
   originalUsuario: Usuario | null = null;
 
@@ -94,10 +98,13 @@ export class EditarUsuario implements OnInit {
       error: (err) => {
         if (err.status === 400) {
           this.errorMsg = err.error?.message || 'Datos inválidos.';
+          this.cdr.detectChanges();
         } else if (err.status === 404) {
           this.errorMsg = 'Usuario no encontrado.';
+          this.cdr.detectChanges();
         } else if (err.status === 401) {
-          this.errorMsg = 'No autorizado.';
+          this.errorMsg = 'El nombre de usuario ya está en uso.';
+          this.cdr.detectChanges();
         } else {
           this.errorMsg = 'Error al guardar los cambios.';
         }

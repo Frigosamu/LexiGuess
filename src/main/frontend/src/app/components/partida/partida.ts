@@ -159,7 +159,6 @@ export class Partida implements OnInit {
     this.partidaService.createPartida(payload).subscribe({
       next: (p) => {
         this.partidaActual = p;
-        console.log('Partida creada:', p);
       },
       error: (err) => console.error('Error creando partida:', err),
     });
@@ -300,7 +299,7 @@ export class Partida implements OnInit {
       const intentosTotales = this.partidaActual.intentos;
       const intentosFallidos = Math.max(0, intentosTotales - 1);
 
-      const puntuacionFinal = Math.max(0, 100 - intentosFallidos * 20);
+      const puntuacionFinal = Math.max(20, 100 - (intentosFallidos * -1) * 15);
 
       this.partidaActual.resultado = 'ganada';
       this.partidaActual.puntuacion = puntuacionFinal;
@@ -311,7 +310,6 @@ export class Partida implements OnInit {
       this.partidaService.updatePartida(this.partidaActual.idPartida!, this.partidaActual)
         .subscribe({
           next: () => {
-            console.log('Partida actualizada con victoria');
             this.comprobarLogros();
           },
 
@@ -336,7 +334,6 @@ export class Partida implements OnInit {
       this.partidaService.updatePartida(this.partidaActual.idPartida!, this.partidaActual)
         .subscribe({
           next: () => {
-            console.log('Partida actualizada con derrota');
             this.comprobarLogros();
           },
 
@@ -459,7 +456,6 @@ export class Partida implements OnInit {
   }
 
 
-
   logrosObtenidos: number[] = [];
   mostrarPopupLogros: boolean = false;
   mensajePopupLogros: string = '';
@@ -475,8 +471,8 @@ export class Partida implements OnInit {
             this.usuarioLogroService.asignarLogroAUsuario(userId, idLogro)
               .subscribe({
                 next: () => {
-                  console.log(`Logro ${idLogro} asignado al usuario ${userId}`)
                   this.logrosObtenidos.push(idLogro);
+                  this.cdr.detectChanges();
                 },
                 error: (err) => console.error('Error asignando logro:', err),
               });
@@ -492,9 +488,11 @@ export class Partida implements OnInit {
     this.mensajePopupLogros = count === 1 ?
       '¡1 logro obtenido!' : `¡${count} logros obtenidos!`;
     this.mostrarPopupLogros = true;
+    this.cdr.detectChanges();
 
     setTimeout(() => {
       this.mostrarPopupLogros = false;
+      this.cdr.detectChanges();
     }, 2000);
 
     this.logrosObtenidos = [];

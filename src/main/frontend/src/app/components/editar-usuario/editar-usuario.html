@@ -29,15 +29,17 @@
                         </div>
                     </div>
 
-                    <div class="mb-3 text-start">
-                        <div class="campo">
-                            <i class="bx bx-shield-quarter"></i>
-                            <select [(ngModel)]="rol" name="rol" id="rol" class="select">
-                                <option value="usuario">Usuario</option>
-                                <option value="admin">Admin</option>
-                            </select>
+                    @if (user()?.rol === 'admin') {
+                        <div class="mb-3 text-start">
+                            <div class="campo">
+                                <i class="bx bx-shield-quarter"></i>
+                                <select [(ngModel)]="rol" name="rol" id="rol" class="select">
+                                    <option value="usuario">Usuario</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
+                    }
 
                     @if (showPopup) {
                     <div class="popup-overlay">

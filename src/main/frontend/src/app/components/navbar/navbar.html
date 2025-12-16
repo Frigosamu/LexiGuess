@@ -1,5 +1,10 @@
 <nav>
-    <div class="sidebar" id="sidebar" [ngClass]="{'minimized': sidebarMinimized}">
+    <div class="menu-btn sidebar-btn" id="sidebar-btn" (click)="toggleMobile()"
+        [class.open]="mobileOpen">
+        <i class="bx bx-menu"></i>
+        <i class="bx bx-x"></i>
+    </div>
+    <div class="sidebar" id="sidebar" [ngClass]="{'minimized': sidebarMinimized, 'mobile-open': mobileOpen}">
         <div class="menu-btn" id="menu-btn" (click)="toggleSidebar()">
             <i class="bx bx-chevron-left"></i>
         </div>
@@ -30,8 +35,8 @@
                     </a>
                     <ul class="sub-menu" [class.open]="dropdownOpen[0]">
                         <li><a routerLink="/usuario" class="sub-menu-link">Mi perfil</a></li>
-                        <li><a [routerLink]="['/editar-usuario']" [queryParams]="{ id: user()?.idUsuario }" 
-                            class="sub-menu-link">Editar mi usuario</a></li>
+                        <li><a [routerLink]="['/editar-usuario']" [queryParams]="{ id: user()?.idUsuario }"
+                                class="sub-menu-link">Editar mi usuario</a></li>
                     </ul>
                 </li>
                 }

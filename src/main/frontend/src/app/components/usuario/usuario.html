@@ -1,57 +1,66 @@
 <div class="container d-flex align-items-center text-center justify-content-center">
-    <div class="position-absolute top-50 start-50 translate-middle align-items-center">
-        <div class="user-box">
-            <h1>{{ user()?.nombre }}</h1>
-            <div class="mb-3 text-start">
-                <p><strong>Email:</strong></p>
-                <div class="campo">
-                    <i class="bx bx-envelope"></i>
-                    <input type="email" value="{{ user()?.email }}" disabled>
-                </div>
-            </div>
-            <div class="mb-3 text-start">
-                <p><strong>Fecha de Registro:</strong></p>
-                <div class="campo">
-                    <i class="bx bx-calendar"></i>
-                    <input type="text" value="{{ user()?.fechaRegistro }}" disabled>
-                </div>
-            </div>
-            <div class="mb-3 text-start">
-              <p><strong>Partidas Jugadas:</strong></p>
-              <div class="table-wrapper">
-                <table class="table table-bordered text-center">
-                  <thead>
-                    <tr>
-                      <th>Palabra</th>
-                      <th>Intentos</th>
-                      <th>Resultado</th>
-                      <th>Fecha</th>
-                      <th>Puntuación</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @if (paginatedPartidas(); as partidasPagina) {
-                      @for (partida of partidasPagina; track partida.idPartida) {
-                        <tr>
-                          <td>{{ partida.palabra.palabra }}</td>
-                          <td>{{ partida.intentos }}</td>
-                          <td>{{ partida.resultado }}</td>
-                          <td>{{ partida.fecha }}</td>
-                          <td>{{ partida.puntuacion }}</td>
-                        </tr>
-                      }
-                    }
-                  </tbody>
-                </table>
-              </div>
-            
-              <div class="pagination">
-                <button class="btn btn-outline-dark" (click)="previousPage()" [disabled]="currentPage() === 1"><i class="bx bx-chevron-left"></i></button>
-                <span>Página {{ currentPage() }} de {{ totalPages() }}</span>
-                <button class="btn btn-outline-dark" (click)="nextPage()" [disabled]="currentPage() === totalPages()"><i class="bx bx-chevron-right"></i></button>
-              </div>
-            </div>
-
+  <div class="position-absolute top-50 start-50 translate-middle align-items-center">
+    <div class="user-box">
+      <h1>{{ user()?.nombre }}</h1>
+      <div class="mb-3 text-start">
+        <p><strong>Email:</strong></p>
+        <div class="campo">
+          <i class="bx bx-envelope"></i>
+          <input type="email" value="{{ user()?.email }}" disabled>
         </div>
+      </div>
+      <div class="mb-3 text-start">
+        <p><strong>Fecha de Registro:</strong></p>
+        <div class="campo">
+          <i class="bx bx-calendar"></i>
+          <input type="text" value="{{ user()?.fechaRegistro }}" disabled>
+        </div>
+      </div>
+      <div class="mb-3 text-start">
+        <p><strong>Puntuación total:</strong></p>
+        <div class="campo">
+          <i class='bx  bx-chart'></i>
+          <input type="text" value="{{ getTotalScore() }}" disabled>
+        </div>
+      </div>
+      <div class="mb-3 text-start">
+        <p><strong>Partidas Jugadas:</strong></p>
+        <div class="table-wrapper">
+          <table class="table table-bordered text-center">
+            <thead>
+              <tr>
+                <th>Palabra</th>
+                <th>Intentos</th>
+                <th>Resultado</th>
+                <th>Fecha</th>
+                <th>Puntuación</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (paginatedPartidas(); as partidasPagina) {
+              @for (partida of partidasPagina; track partida.idPartida) {
+              <tr>
+                <td>{{ partida.palabra.palabra }}</td>
+                <td>{{ partida.intentos }}</td>
+                <td>{{ partida.resultado }}</td>
+                <td>{{ partida.fecha }}</td>
+                <td>{{ partida.puntuacion }}</td>
+              </tr>
+              }
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <button class="btn btn-outline-dark" (click)="previousPage()" [disabled]="currentPage() === 1"><i
+              class="bx bx-chevron-left"></i></button>
+          <span>Página {{ currentPage() }} de {{ totalPages() }}</span>
+          <button class="btn btn-outline-dark" (click)="nextPage()" [disabled]="currentPage() === totalPages()"><i
+              class="bx bx-chevron-right"></i></button>
+        </div>
+      </div>
+
     </div>
+  </div>
 </div>

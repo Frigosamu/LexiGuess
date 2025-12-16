@@ -217,7 +217,7 @@
     color: #0f172a;
 }
 
-@media (max-width: 1820px) {
+@media (max-width: 1630px) {
     .ranking {
         display: none;
     }
